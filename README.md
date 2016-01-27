@@ -1,2 +1,2 @@
 # nsplus
-Nationstates API wrapper using Lazy Loading
+Nationstates API for python
