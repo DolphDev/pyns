@@ -24,7 +24,8 @@ class Api(object):
         return Region(self, region)
 
     def get_wa(self, council):
-        return WorldApi
+        return WorldAssemblyApi(self, council)
+
 
     def get_world(self):
         return WorldApi(self)

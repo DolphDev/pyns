@@ -1,21 +1,12 @@
-from nationstates import Shard
-
 try:
     import decorator
     from core.exceptions import InvalidShard
+    from shardobjects import Shard
 except ImportError:
     from . import decorator
     from .core.exceptions import InvalidShard
+    from .shardobjects import Shard
 
-
-
-class Shard(Shard):
-
-    def __eq__(self, n):
-        return n._get_main_value() == self._get_main_value()
-
-    def __hash__(self):
-        return hash(self.__class__) ^ hash(self._get_main_value())
 
 class NSBaseObject(object):
     pass
