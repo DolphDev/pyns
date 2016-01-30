@@ -1,5 +1,5 @@
 try:
-    from objects import (Nation, Region, WorldApi, WorldAssembly, Shard)
+    from objects import (Nation, Region, WorldApi, WorldAssemblyApi, Shard)
     from core import RequestObject
 except ImportError:
     from .core import RequestObject
