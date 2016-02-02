@@ -58,6 +58,11 @@ class APIObject(NSBaseObject):
              else shard for shard in shards]) | self.__shardfetch__
         return self
 
+    def get(self, *args):
+        self.fetch(*args)
+        return self.execute()
+
+
     def needsfetch(self, shard):
         if not self.has_shard(shard):
             self.fetch(shard)

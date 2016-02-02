@@ -4,7 +4,7 @@ try:
 except ImportError:
     from .core import RequestObject
     from .objects import (Nation, Region,
-                          WorldApi, Shard)
+                          WorldApi, WorldAssemblyApi,Shard)
 
 
 
@@ -17,17 +17,16 @@ class Api(object):
         self.version = apiversion
         self.user_agent = user_agent
 
-    def get_nation(self, nation):
+    def nation(self, nation):
         return Nation(self, nation)
 
-    def get_region(self, region):
+    def region(self, region):
         return Region(self, region)
 
-    def get_wa(self, council):
+    def wa(self, council):
         return WorldAssemblyApi(self, council)
 
-
-    def get_world(self):
+    def world(self):
         return WorldApi(self)
 
 
