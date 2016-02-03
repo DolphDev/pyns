@@ -7,7 +7,6 @@ except ImportError:
                           WorldApi, WorldAssemblyApi,Shard)
 
 
-
 class Api(object):
 
     def __init__(self, user_agent=None, apiversion="7"):

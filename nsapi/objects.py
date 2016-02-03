@@ -29,7 +29,6 @@ class APIObject(NSBaseObject):
 
         if not isinstance(attr, Shard):
             attr = Shard(attr)
-
         if attr in self.__shardhas__:
             return self.collect()[attr.name]
         try:
@@ -95,6 +94,9 @@ class APIObject(NSBaseObject):
     def __value__(self):
         raise NotImplementedError
 
+    def __gen__(self, cls, val, splitval):
+        for item in self.collect().get(val).split(splitval):
+            yield cls(self.api_instance, item)
 
 @decorator.implement_shardtrack
 class Nation(APIObject):
@@ -105,6 +107,10 @@ class Nation(APIObject):
         self.api_instance = api_instance
         self.nsobj = api_instance.r.get(
             self.__apiendpoint__, self.__value__, set())
+
+    @property
+    def nationname(self):
+        return self.__value__
 
     @property
     def region(self):
@@ -133,8 +139,12 @@ class Region(APIObject):
     @property
     def nations(self):
         self.needsfetch("nations")
-        for nation in self.collect().get("nations").split(":"):
-            yield (Nation(self.api_instance, nation))
+        return self.__gen__(Nation, "nations", ":")
+
+
+    @property
+    def regionname(self):
+        return self.__value__
 
     @property
     def __value__(self):
@@ -147,8 +157,26 @@ class Region(APIObject):
 
 @decorator.implement_shardtrack
 class WorldAssemblyApi(APIObject):
-    pass
 
+    def __init__(self, api_instance, council):
+        self.__council__ = council
+        self.__apiendpoint__ = "wa"
+        self.api_instance = api_instance
+        self.nsobj = api_instance.r.get(
+            self.__apiendpoint__, self.__value__, set())
+
+    @property
+    def members(self):
+        self.needsfetch("members")
+        return self.__gen__(Nation, "members", ",")
+
+    @property
+    def __value__(self):
+        return self.__council__
+
+    @__value__.setter
+    def __value__(self, val):
+        self.__council__ = val
 
 @decorator.implement_shardtrack
 class WorldApi(APIObject):
@@ -172,8 +200,7 @@ class WorldApi(APIObject):
         string = (','.join(taggen))
         shard = Shard("regionsbytag", tags=string)
         self.needsfetch(shard)
-        for region in self.collect().regions.split(","):
-            yield Region(self.api_instance, region)
+        return self.__gen__(Region, shard.name,  ',')
 
     @property
     def __value__(self):
