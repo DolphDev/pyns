@@ -61,7 +61,6 @@ class APIObject(NSBaseObject):
         self.fetch(*args)
         return self.execute()
 
-
     def needsfetch(self, shard):
         if not self.has_shard(shard):
             self.fetch(shard)
@@ -97,6 +96,7 @@ class APIObject(NSBaseObject):
     def __gen__(self, cls, val, splitval):
         for item in self.collect().get(val).split(splitval):
             yield cls(self.api_instance, item)
+
 
 @decorator.implement_shardtrack
 class Nation(APIObject):
@@ -141,7 +141,6 @@ class Region(APIObject):
         self.needsfetch("nations")
         return self.__gen__(Nation, "nations", ":")
 
-
     @property
     def regionname(self):
         return self.__value__
@@ -178,6 +177,7 @@ class WorldAssemblyApi(APIObject):
     def __value__(self, val):
         self.__council__ = val
 
+
 @decorator.implement_shardtrack
 class WorldApi(APIObject):
 
@@ -200,7 +200,12 @@ class WorldApi(APIObject):
         string = (','.join(taggen))
         shard = Shard("regionsbytag", tags=string)
         self.needsfetch(shard)
-        return self.__gen__(Region, shard.name,  ',')
+        return self.__gen__(Region, "regions", ',')
+
+    @property
+    def newnations(self):
+        self.needsfetch("newnations")
+        return self.__gen__(Nation, "newnations", ',')
 
     @property
     def __value__(self):
