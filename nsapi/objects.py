@@ -11,10 +11,6 @@ except ImportError:
 class NSBaseObject(object):
     pass
 
-class ShardObject(NSBaseObject):
-    pass
-
-
 class APIObject(NSBaseObject):
 
     """
@@ -40,7 +36,7 @@ class APIObject(NSBaseObject):
                 self.execute()
                 return self.collect()[attr.name]
         except KeyError:
-            raise InvalidShard('\'{shard}\' was not returned by the Nationstates API. If not a shard request {attrmessage}'.format(
+            raise AttributeError('{attrmessage}'.format(
                 shard=attr, attrmessage=('\'%s\' has no attribute \'%s\'' % (type(self),
                                                                              attr))))
 
@@ -95,7 +91,8 @@ class APIObject(NSBaseObject):
 
     def __gen__(self, cls, val, splitval):
         for item in self.collect().get(val).split(splitval):
-            yield cls(self.api_instance, item)
+                yield cls(self.api_instance, item)
+
 
 
 @decorator.implement_shardtrack
@@ -199,8 +196,12 @@ class WorldApi(APIObject):
             for x, y in kwargs.items()])
         string = (','.join(taggen))
         shard = Shard("regionsbytag", tags=string)
-        self.needsfetch(shard)
-        return self.__gen__(Region, "regions", ',')
+        self.fetch(shard)
+        self.execute()
+        try:
+            return self.__genrbt__(Region, "regions", ',')
+        except:
+            raise AttributeError("PLEASE WORK") #Replace with invalid shard
 
     @property
     def newnations(self):
@@ -210,3 +211,11 @@ class WorldApi(APIObject):
     @property
     def __value__(self):
         return self.__world__
+
+    def __genrbt__(self, cls, val, splitval):
+        #Special method for python3.5.0 wierdness
+        try:
+            for item in self.collect().get(val).split(splitval):
+                    yield cls(self.api_instance, item)
+        except AttributeError:
+            raise InvalidShard("Invalid Tag used for request")
