@@ -213,7 +213,7 @@ class WorldApi(APIObject):
         return self.__world__
 
     def __genrbt__(self, cls, val, splitval):
-        #Special method for python3.5.0 wierdness
+        #Slightly specialized for regionsbytag
         try:
             for item in self.collect().get(val).split(splitval):
                     yield cls(self.api_instance, item)
