@@ -1,15 +1,16 @@
 try:
     import decorator
-    from core.exceptions import InvalidShard
+    from core.exceptions import InvalidShard, InvalidTag
     from shardobjects import Shard
 except ImportError:
     from . import decorator
-    from .core.exceptions import InvalidShard
+    from .core.exceptions import InvalidShard, invalidTag
     from .shardobjects import Shard
 
 
 class NSBaseObject(object):
     pass
+
 
 class APIObject(NSBaseObject):
 
@@ -91,8 +92,7 @@ class APIObject(NSBaseObject):
 
     def __gen__(self, cls, val, splitval):
         for item in self.collect().get(val).split(splitval):
-                yield cls(self.api_instance, item)
-
+            yield cls(self.api_instance, item)
 
 
 @decorator.implement_shardtrack
@@ -198,10 +198,7 @@ class WorldApi(APIObject):
         shard = Shard("regionsbytag", tags=string)
         self.fetch(shard)
         self.execute()
-        try:
-            return self.__genrbt__(Region, "regions", ',')
-        except:
-            raise AttributeError("PLEASE WORK") #Replace with invalid shard
+        return self.__genrbt__(Region, "regions", ',')
 
     @property
     def newnations(self):
@@ -213,9 +210,11 @@ class WorldApi(APIObject):
         return self.__world__
 
     def __genrbt__(self, cls, val, splitval):
-        #Slightly specialized for regionsbytag
+        # Slightly specialized for regionsbytag
         try:
             for item in self.collect().get(val).split(splitval):
-                    yield cls(self.api_instance, item)
+                yield cls(self.api_instance, item)
         except AttributeError:
-            raise InvalidShard("Invalid Tag used for request")
+            # Replace with invalid shard
+            raise InvalidTag(
+                "Invalid Tag: Check your tags, the nationstates api did not return a valid response.")

@@ -7,6 +7,3 @@ def implement_shardtrack(obj):
     obj.__shardhas__ = set()
     obj.__shardfetch__ = set()
     return obj
-
-def implement_nationobject(obj):
-    return obj
