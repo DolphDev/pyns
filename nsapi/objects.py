@@ -1,10 +1,12 @@
+from nationstates import Shard as _Shard
+
 try:
     import decorator
     from core.exceptions import InvalidShard, InvalidTag
     from shardobjects import Shard
 except ImportError:
     from . import decorator
-    from .core.exceptions import InvalidShard, invalidTag
+    from .core.exceptions import InvalidShard, InvalidTag
     from .shardobjects import Shard
 
 
@@ -42,16 +44,31 @@ class APIObject(NSBaseObject):
                                                                              attr))))
 
     def __repr__(self):
-        return "<{objectname}:{nationname} at {id}>".format(
+        return "<{objectname}:{value} at {id}>".format(
             objectname=self.__class__.__name__,
-            nationname=self.__value__,
-            id=(hex(id(self))).upper()
+            value=self.__value__,
+            id=str(hex(id(self))).upper()
         )
 
     def fetch(self, *shards):
+        for shard in shards:
+            if (
+                not (isinstance(shard, _Shard)
+                     or isinstance(shard, Shard)
+                     or isinstance(shard, str))):
+                raise TypeError("Shard can't be Type({})".format(type(shard)))
         self.__shardfetch__ = set(
-            [Shard(shard) if not isinstance(shard, Shard)
-             else shard for shard in shards]) | self.__shardfetch__
+            [Shard(shard) if isinstance(shard, str)
+             else (Shard(
+                 shard.name,
+                 **{key[0][1]:key[1][1] for (key) in [
+                     sorted(list(shard.items()))
+                     for shard in shard._tags]})
+                   if (isinstance(shard, _Shard)
+                       or isinstance(shard. Shard))
+                   else shard)
+             for shard in shards]) | self.__shardfetch__
+
         return self
 
     def get(self, *args):
