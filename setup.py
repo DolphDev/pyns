@@ -33,7 +33,7 @@ SOFTWARE.
 
 from setuptools import setup
 setup(name='nsapi',
-      install_requires=["nationstates>=1.1.30.59"],
+      install_requires=["nationstates>=1.1.30.60"],
       version="0.0.0.1",
       description='We the People api wrapper for python',
       author='Joshua Walters',

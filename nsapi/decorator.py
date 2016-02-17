@@ -7,3 +7,15 @@ def implement_shardtrack(obj):
     obj.__shardhas__ = set()
     obj.__shardfetch__ = set()
     return obj
+
+def default_request(kind):
+
+    def wrapper(obj):
+
+        def get(self):
+            self.execute()
+            self.__shardhas__ = self.__shardhas__ | set(self.collect().keys())
+            return self
+        setattr(obj, kind, get)
+        return obj
+    return wrapper
