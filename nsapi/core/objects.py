@@ -4,15 +4,16 @@ from nationstates import Shard as _Shard
 def apirequest(instance, retry=3):
     pass
 
+
 class NSBaseObject(object):
     pass
 
 
 class Shard(_Shard):
 
-    """While usaully we want to shards with different params to be different objects (Not ==), 
-    The api and therefore this module doesnt work that way.
-    Each request can only have 1 of each shard.
+    """While usaully we want to shards with different params
+    to be different objects (Not ==), The api and therefore this module
+    doesnt work that way. Each request can only have 1 of each shard.
     """
 
     def __eq__(self, n):
@@ -51,8 +52,9 @@ class APIObject(NSBaseObject):
                 return self.collect()[attr.name]
         except KeyError:
             raise AttributeError('{attrmessage}'.format(
-                shard=attr, attrmessage=('\'%s\' has no attribute \'%s\'' % (type(self),
-                                                                             attr))))
+                shard=attr,
+                attrmessage=('\'%s\' has no attribute \'%s\'' % (
+                    type(self), attr))))
 
     def __getitem__(self, attr):
         self.fetch(attr)
@@ -106,11 +108,12 @@ class APIObject(NSBaseObject):
         return shard in self.__shardhas__
 
     def execute(self):
-        self.nsobj = self.api_instance.r.get(self.__apiendpoint__,
-                                             value=self.__value__,
-                                             shard=self.__shardref__)
-        self.__shardhas__ = self.__shardref__
-        self.__shardfetch__ = set()
+        self.nsobj = (
+            self.api_instance.r
+            .get(self.__apiendpoint__, value=self.__value__,
+                                       shard=self.__shardref__)
+        self.__shardhas__=self.__shardref__
+        self.__shardfetch__=set()
         try:
             self.nsobj.load()
         except ConnectionError as err:

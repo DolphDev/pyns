@@ -13,8 +13,9 @@ def default_request(kind):
     def wrapper(obj):
 
         def get(self):
-            self.nsobj = self.api_instance.r.get(self.__apiendpoint__,
-                                             value=self.__value__)
+            self.nsobj = (
+                self.api_instance.r
+                .get(self.__apiendpoint__, value=self.__value__))
             try:
                 self.nsobj.load()
             except ConnectionError as err:
