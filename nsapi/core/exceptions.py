@@ -1,4 +1,4 @@
-from nationstates.NScore.exceptions import CollectError, NSError
+from nationstates.NScore.exceptions import CollectError, NSError, ConnectionError
 
 class BaseNSError(NSError):
     pass
@@ -8,3 +8,4 @@ class InvalidShard(KeyError, AttributeError, NSError):
 
 class InvalidTag(NSError):
     pass
+

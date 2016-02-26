@@ -1,5 +1,28 @@
+from nationstates import Shard as _Shard
+
+
+def apirequest(instance, retry=3):
+    pass
+
 class NSBaseObject(object):
     pass
+
+
+class Shard(_Shard):
+
+    """While usaully we want to shards with different params to be different objects (Not ==), 
+    The api and therefore this module doesnt work that way.
+    Each request can only have 1 of each shard.
+    """
+
+    def __eq__(self, n):
+        if n.__class__ == self.__class__:
+            return n._get_main_value() == self._get_main_value()
+        return False
+
+    def __hash__(self):
+
+        return hash(self.__class__) ^ hash(self._get_main_value())
 
 
 class APIObject(NSBaseObject):
@@ -88,7 +111,10 @@ class APIObject(NSBaseObject):
                                              shard=self.__shardref__)
         self.__shardhas__ = self.__shardref__
         self.__shardfetch__ = set()
-        self.nsobj.load()
+        try:
+            self.nsobj.load()
+        except ConnectionError as err:
+            raise err
         return self
 
     def refresh(self):
