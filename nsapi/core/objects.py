@@ -105,15 +105,18 @@ class APIObject(NSBaseObject):
         return shard in self.__shardfetch__
 
     def has_shard(self, shard):
-        return shard in self.__shardhas__
+        if not isinstance(shard, Shard):
+            shard = Shard(shard)
+            return shard in self.__shardhas__
 
     def execute(self):
         self.nsobj = (
             self.api_instance.r
             .get(self.__apiendpoint__, value=self.__value__,
-                                       shard=self.__shardref__)
-        self.__shardhas__=self.__shardref__
-        self.__shardfetch__=set()
+                 shard=self.__shardref__)
+        )
+        self.__shardhas__ = self.__shardref__
+        self.__shardfetch__ = set()
         try:
             self.nsobj.load()
         except ConnectionError as err:
