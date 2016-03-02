@@ -76,13 +76,12 @@ class APIObject(NSBaseObject):
                 raise TypeError("Shard can't be Type({})".format(type(shard)))
         self.__shardfetch__ = set(
             [Shard(shard) if isinstance(shard, str)
-             else (Shard(
-                 shard.name,
-                 **{key[0][1]:key[1][1] for (key) in [
-                     sorted(list(shard.items()))
-                     for shard in shard._tags]})
+             else (Shard(shard.name,
+                         **{key[0][1]:key[1][1] for (key) in [
+                             sorted(list(shard.items()))
+                             for shard in shard._tags]})
                    if (isinstance(shard, _Shard)
-                       or isinstance(shard. Shard))
+                       or isinstance(shard, Shard))
                    else shard)
              for shard in shards]) | self.__shardfetch__
 
