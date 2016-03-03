@@ -1,8 +1,6 @@
 from nationstates import Api as NSApi, get_ratelimit, clear_ratelimit
 #from . import exceptions
 
-__rltracker__ = list()
-
 
 
 class SessionWrapper():
