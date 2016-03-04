@@ -32,14 +32,14 @@ SOFTWARE.
 """
 
 from setuptools import setup
-setup(name='nsapi',
+setup(name='pyns',
       install_requires=["nationstates>=1.1.30.60"],
       version="0.0.0.1",
       description='We the People api wrapper for python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',
       url='https://github.com/Dolphman/wethepeople',
-      packages=['nsapi', 'nsapi.core'],
+      packages=['pyns', 'pyns.core'],
       keywords=['Nationstates for Python', 'Python API', 'api'],
       classifiers=["License :: OSI Approved :: MIT License",
                    "Operating System :: OS Independent",

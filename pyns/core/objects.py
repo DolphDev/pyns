@@ -51,6 +51,7 @@ class APIObject(NSBaseObject):
                 self.execute()
                 return self.collect()[attr.name]
         except KeyError:
+            self.__shardhas__.remove(attr)
             raise AttributeError('{attrmessage}'.format(
                 shard=attr,
                 attrmessage=('\'%s\' has no attribute \'%s\'' % (
