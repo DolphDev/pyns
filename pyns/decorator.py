@@ -24,6 +24,7 @@ def default_request(kind):
                 self.nsobj.load()
             except ConnectionError as err:
                 raise err
+            self.__shardfetch__ = self.__shardhas__
             self.__shardhas__ = self.__shardref__ | set(
                 (Shard(x) for x in (self.collect().keys())))
             return self

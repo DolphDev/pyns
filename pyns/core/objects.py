@@ -68,6 +68,9 @@ class APIObject(NSBaseObject):
             id=str(hex(id(self))).upper()
         )
 
+    def __dir__(self):
+        return dir(super(NSBaseObject, self)) + [x.name for x in self.__shardref__]
+
     def fetch(self, *shards):
         for shard in shards:
             if (

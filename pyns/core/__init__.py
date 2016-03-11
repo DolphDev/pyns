@@ -6,7 +6,7 @@ from nationstates import Api as NSApi, get_ratelimit, clear_ratelimit
 class SessionWrapper():
 
     """
-    This Class Wraps around Request.Session
+    This Class Wraps around Nationstates.Api
     """
 
     def __init__(self, user_agent):
