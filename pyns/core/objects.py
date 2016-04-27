@@ -95,6 +95,10 @@ class APIObject(NSBaseObject):
         self.fetch(*args)
         return self.execute()
 
+    def group(self, *args):
+        self.get(*args)
+        return {x:self.collect()[x] for x in args}
+
     def needsfetch(self, shard):
         if not self.has_shard(shard):
             self.fetch(shard)
