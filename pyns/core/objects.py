@@ -1,5 +1,5 @@
 from nationstates import Shard as _Shard
-
+from nationstates.NScore.bs4parser import NSDict
 
 def apirequest(instance, retry=3):
     pass
@@ -97,7 +97,8 @@ class APIObject(NSBaseObject):
 
     def group(self, *args):
         self.get(*args)
-        return {x:self.collect()[x] for x in args}
+        argstring = [x.name if not isinstance(x, str) else x for x in args]
+        return NSDict({x:self.collect()[x] for x in argstring})
 
     def needsfetch(self, shard):
         if not self.has_shard(shard):
