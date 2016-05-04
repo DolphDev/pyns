@@ -1,10 +1,6 @@
 from nationstates import Shard as _Shard
 from nationstates.NScore.bs4parser import NSDict
 
-def apirequest(instance, retry=3):
-    pass
-
-
 class NSBaseObject(object):
     pass
 
