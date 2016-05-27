@@ -109,8 +109,10 @@ class APIObject(NSBaseObject):
         return shard in self.__shardfetch__
 
     def has_shard(self, shard):
-        if not isinstance(shard, Shard):
+        if isinstance(shard, str):
             shard = Shard(shard)
+            return shard in self.__shardhas__
+        else:
             return shard in self.__shardhas__
 
     def execute(self):

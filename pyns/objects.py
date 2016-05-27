@@ -28,6 +28,13 @@ class Nation(APIObject):
     def nationname(self):
         return self.__value__
 
+    def can_recruit(self, fromregion=None):
+        if fromregion:
+            self.needsfetch(Shard("tgcanrecruit", fromregion=fromregion))
+        else:
+            self.needsfetch("tgcanrecruit")
+        return bool(int(self.tgcanrecruit))
+
     @property
     def region(self):
         self.needsfetch("region")
