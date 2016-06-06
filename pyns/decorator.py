@@ -1,11 +1,30 @@
 from .core.objects import (Shard)
 
+def hasname(n, shardlist):
+    return n in {x.name for x in shardlist}
+
+def getshard(n, shardlist):
+    for x in shardlist:
+        if x.name == n:
+            return x
+
+
+def shardrefcalc(shardfetch, shardhas):
+    namelist = {x.name for x in shardfetch | shardhas}
+    for sname in namelist:
+        if hasname(sname, shardfetch):
+            yield getshard(sname, shardfetch)
+            continue
+        if hasname(sname, shardhas):
+            yield getshard(sname, shardhas)
+            continue
+
 
 def implement_shardtrack(obj):
 
     @property
     def __shardref__(self):
-        return self.__shardfetch__ | self.__shardhas__
+        return set(shardrefcalc(self.__shardfetch__, self.__shardhas__))
     obj.__shardref__ = __shardref__
     obj.__shardhas__ = set()
     obj.__shardfetch__ = set()
