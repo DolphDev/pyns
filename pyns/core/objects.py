@@ -4,6 +4,11 @@ from nationstates.NScore.bs4parser import NSDict
 class NSBaseObject(object):
     pass
 
+def IsPynsShard(shard):
+    try:
+        return shard.is_pyns
+    except:
+        return False
 
 class Shard(_Shard):
 
@@ -14,13 +19,23 @@ class Shard(_Shard):
 
     def __eq__(self, n):
         if n.__class__ == self.__class__:
-            return n._get_main_value() == self._get_main_value()
+            return (n._get_main_value() == self._get_main_value())
         return False
 
     def __hash__(self):
 
         return hash(self.__class__) ^ hash(self._get_main_value())
 
+    def __repr__(self):
+        return "<{shardname}:({argnum})>".format(shardname=self.name, argnum=str(self.tail_gen()))
+
+    def __str__(self):
+        return "<{shardname}:({argnum})>".format(shardname=self.name, argnum=str(self.tail_gen()))
+
+
+    @property
+    def is_pyns(self):
+        return True
 
 class APIObject(NSBaseObject):
 
@@ -34,19 +49,22 @@ class APIObject(NSBaseObject):
     def __getattr__(self, attr):
         """Allows dynamic access to Nationstates shards"""
 
-        if not isinstance(attr, Shard):
+        if isinstance(attr, str):
             attr = Shard(attr)
+
+
         if attr in self.__shardhas__:
             return self.collect()[attr.name]
         try:
-            if attr in self.__shardfetch__:
+            if attr.name in self.__shardfetch__:
                 self.execute()
                 return self.collect()[attr.name]
             else:
                 self.fetch(attr)
                 self.execute()
                 return self.collect()[attr.name]
-        except KeyError:
+        except KeyError as err:
+            raise err
             self.__shardhas__.remove(attr)
             raise AttributeError('{attrmessage}'.format(
                 shard=attr,
@@ -74,17 +92,12 @@ class APIObject(NSBaseObject):
                      or isinstance(shard, Shard)
                      or isinstance(shard, str))):
                 raise TypeError("Shard can't be Type({})".format(type(shard)))
-        self.__shardfetch__ = set(
+        self.__shardfetch__ = self.__shardfetch__ | set(
             [Shard(shard) if isinstance(shard, str)
              else (Shard(shard.name,
-                         **{key[0][1]:key[1][1] for (key) in [
-                             sorted(list(shard.items()))
-                             for shard in shard._tags]})
-                   if (isinstance(shard, _Shard)
-                       or isinstance(shard, Shard))
-                   else shard)
-             for shard in shards]) | self.__shardfetch__
-
+                         **shard.tail_gen()))
+             for shard in shards])
+        print(self.__shardfetch__)
         return self
 
     def get(self, *args):
@@ -112,6 +125,8 @@ class APIObject(NSBaseObject):
         if isinstance(shard, str):
             shard = Shard(shard)
             return shard in self.__shardhas__
+        if not IsPynsShard(shard):
+            shard = Shard(shard._get_main_value(), **shard.tail_gen())
         else:
             return shard in self.__shardhas__
 
