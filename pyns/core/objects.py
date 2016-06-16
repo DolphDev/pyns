@@ -97,7 +97,6 @@ class APIObject(NSBaseObject):
              else (Shard(shard.name,
                          **shard.tail_gen()))
              for shard in shards])
-        print(self.__shardfetch__)
         return self
 
     def get(self, *args):
