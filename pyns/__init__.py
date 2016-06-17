@@ -9,7 +9,7 @@ except ImportError:
 
 class Api(object):
 
-    def __init__(self, user_agent=None, apiversion="7"):
+    def __init__(self, user_agent=None, apiversion="8"):
         """Creates Api Instance"""
 
         self.r = RequestObject(user_agent=user_agent)
