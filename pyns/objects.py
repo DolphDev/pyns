@@ -30,7 +30,7 @@ class Nation(APIObject):
 
     def can_recruit(self, fromregion=None):
         if fromregion:
-            self.needsfetch(Shard("tgcanrecruit", fromregion=fromregion))
+            self.needsfetch(Shard("tgcanrecruit", **{"from":fromregion}))
         else:
             self.needsfetch(Shard("tgcanrecruit"))
         return bool(int(self.collect()["tgcanrecruit"]))
