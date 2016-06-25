@@ -33,9 +33,9 @@ SOFTWARE.
 
 from setuptools import setup
 setup(name='pyns',
-      install_requires=["nationstates>=1.1.30.60"],
+      install_requires=["nationstates>=1.1.33.63"],
       version="0.0.0.1",
-      description='We the People api wrapper for python',
+      description='Nationstates for Python',
       author='Joshua Walters',
       author_email='therealdolphman@gmail.com',
       url='https://github.com/Dolphman/wethepeople',

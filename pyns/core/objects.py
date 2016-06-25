@@ -92,10 +92,10 @@ class APIObject(NSBaseObject):
                      or isinstance(shard, str))):
                 raise TypeError("Shard can't be Type({})".format(type(shard)))
         self.__shardfetch__ = self.__shardfetch__ | set(
-            [Shard(shard) if isinstance(shard, str)
+            (Shard(shard) if isinstance(shard, str)
              else (Shard(shard.name,
                          **shard.tail_gen()))
-             for shard in shards])
+             for shard in shards))
         return self
 
     def get(self, *args):
@@ -104,7 +104,7 @@ class APIObject(NSBaseObject):
 
     def group(self, *args):
         self.get(*args)
-        argstring = [x.name if not isinstance(x, str) else x for x in args]
+        argstring = (x.name if not isinstance(x, str) else x for x in args)
         return NSDict({x:self.collect()[x] for x in argstring})
 
     def needsfetch(self, shard):
