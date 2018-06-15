@@ -1,3 +1,5 @@
+#This Project has been abandoned, though it's goal is continue at https://github.com/DolphDev/pynationstates
+
 # PYNS
 Nationstates API for python
 
